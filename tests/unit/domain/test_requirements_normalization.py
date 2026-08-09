@@ -10,6 +10,7 @@ from app.domain.models import (
     ExecutionRequirements,
     InterfaceProfile,
     ProjectRequirements,
+    RequirementTraceReference,
     TeamProfile,
 )
 from app.domain.services import (
@@ -154,6 +155,25 @@ def test_result_and_change_contracts_are_immutable() -> None:
         change.field_path = "changed"  # type: ignore[misc]
     with pytest.raises(FrozenInstanceError):
         result.changes = ()  # type: ignore[misc]
+
+
+def test_change_exposes_single_indexed_trace_reference_without_changing_contract() -> None:
+    path = "constraints.approved_technologies[0]"
+    change = RequirementNormalizationChange(
+        path,
+        " Playwright ",
+        "playwright",
+        RequirementNormalizationRule.TRIM_AND_CASEFOLD_CASE_INSENSITIVE_VALUE,
+    )
+
+    assert change.field_path is path
+    assert change.trace_references == (RequirementTraceReference(path),)
+    assert RequirementNormalizationChange(
+        path,
+        " Playwright ",
+        "playwright",
+        RequirementNormalizationRule.TRIM_AND_CASEFOLD_CASE_INSENSITIVE_VALUE,
+    ) == change
 
 
 def test_normalization_service_is_framework_independent() -> None:

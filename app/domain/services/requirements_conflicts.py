@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from enum import StrEnum
 
-from app.domain.models import ProjectRequirements
+from app.domain.models import ProjectRequirements, RequirementTraceReference
 
 
 class ConflictSeverity(StrEnum):
@@ -21,6 +21,11 @@ class RequirementConflict:
     field_paths: tuple[str, ...]
     message: str
     conflicting_value: str
+
+    @property
+    def trace_references(self) -> tuple[RequirementTraceReference, ...]:
+        """Typed references preserving the conflicting field-path sequence."""
+        return tuple(RequirementTraceReference(path) for path in self.field_paths)
 
 
 @dataclass(frozen=True, slots=True)

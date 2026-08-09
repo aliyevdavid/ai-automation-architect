@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from operator import attrgetter
 
-from app.domain.models import ProjectRequirements
+from app.domain.models import ProjectRequirements, RequirementTraceReference
 
 _BASE_REQUIRED_FIELDS = (
     "application.application_type",
@@ -42,6 +42,11 @@ class RequirementsCompletenessResult:
     missing_requirements: tuple[str, ...]
     completeness_percentage: float
     is_complete: bool
+
+    @property
+    def missing_trace_references(self) -> tuple[RequirementTraceReference, ...]:
+        """Typed references preserving the missing-requirement path sequence."""
+        return tuple(RequirementTraceReference(path) for path in self.missing_requirements)
 
 
 def analyze_requirements_completeness(

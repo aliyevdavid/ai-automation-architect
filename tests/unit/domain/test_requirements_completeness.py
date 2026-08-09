@@ -10,6 +10,7 @@ from app.domain.models import (
     ExecutionRequirements,
     InterfaceProfile,
     ProjectRequirements,
+    RequirementTraceReference,
     TeamProfile,
 )
 from app.domain.services import (
@@ -207,6 +208,27 @@ def test_missing_requirement_order_is_stable() -> None:
         "application.backend_technology",
         "execution.browsers",
     )
+
+
+def test_missing_trace_references_preserve_paths_order_and_duplicates() -> None:
+    paths = (
+        "automation.api_testing",
+        "constraints.approved_technologies[0]",
+        "automation.api_testing",
+    )
+    result = RequirementsCompletenessResult(3, 0, paths, 0.0, False)
+
+    assert result.missing_requirements is paths
+    assert result.missing_trace_references == tuple(
+        RequirementTraceReference(path) for path in paths
+    )
+    assert RequirementsCompletenessResult(3, 0, paths, 0.0, False) == result
+
+
+def test_complete_result_has_no_missing_trace_references() -> None:
+    result = RequirementsCompletenessResult(24, 24, (), 100.0, True)
+
+    assert result.missing_trace_references == ()
 
 
 def test_analysis_does_not_mutate_project_requirements() -> None:
