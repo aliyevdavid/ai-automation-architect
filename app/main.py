@@ -3,8 +3,8 @@ from fastapi import FastAPI
 app = FastAPI(
     title="AI Automation Architect",
     description=(
-        "AI-assisted engineering platform for automation architecture "
-        "analysis and blueprint generation."
+        "Early-stage engineering service with a deterministic domain foundation "
+        "for structured test-automation requirement analysis."
     ),
     version="0.1.0",
 )

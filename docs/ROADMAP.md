@@ -2,7 +2,27 @@
 ## Engineering Roadmap
 
 **Version:** 0.1
-**Status:** Initial Delivery Plan
+**Status:** Active delivery plan; updated for v0.1.0
+
+---
+
+## Current Milestone Status
+
+Completed for v0.1.0:
+
+- platform bootstrap, health endpoint, quality tooling, CI, and core engineering documents
+- `Project`, `ProjectStatus`, and structured `ProjectRequirements` domain models
+- deterministic completeness and missing-information analysis
+- deterministic detection of explicit technology conflicts
+- deterministic findings for explicitly requested engineering capabilities
+
+Partially complete:
+
+- domain foundation: later decision, risk, assumption, candidate, and blueprint models remain planned
+- requirement intelligence: normalization, preference-versus-constraint classification, traceability, application services, and HTTP submission remain planned
+- deterministic policy engine: the first narrow capability policies exist; broader suitability, compatibility, and risk policies remain planned
+
+All API workflows beyond health, AI integration, candidate generation, proposal lifecycle, blueprint generation, persistence, artifact generation, and the engineering console remain planned.
 
 ---
 
@@ -95,17 +115,17 @@ Phase 0 is complete when:
 
 Define the core engineering concepts without depending on FastAPI, databases, or AI providers.
 
-### Planned Domain Models
+### Domain Models
 
-- Project
-- ProjectStatus
-- ProjectRequirements
-- ApplicationProfile
-- InterfaceProfile
-- AutomationRequirements
-- ExecutionRequirements
-- DeliveryProfile
-- TeamProfile
+- Project (implemented)
+- ProjectStatus (implemented)
+- ProjectRequirements (implemented)
+- ApplicationProfile (implemented)
+- InterfaceProfile (implemented)
+- AutomationRequirements (implemented)
+- ExecutionRequirements (implemented)
+- DeliveryProfile (implemented)
+- TeamProfile (implemented)
 - Constraint
 - RequirementReference
 - ArchitectureDecision
@@ -142,12 +162,12 @@ This phase should establish:
 
 Convert submitted project information into reliable architecture context.
 
-### Planned Capabilities
+### Capabilities
 
-- requirement validation
-- completeness scoring
-- missing-information detection
-- conflict detection
+- requirement validation (partially implemented in domain models)
+- completeness scoring (implemented)
+- missing-information detection (implemented)
+- conflict detection (implemented for explicit technology contradictions)
 - normalization
 - preference-versus-constraint distinction
 - requirement traceability
@@ -811,19 +831,17 @@ Engineering Console
 
 ## 19. Near-Term Development Order
 
-The immediate implementation order should be:
+The next implementation priorities after v0.1.0 should be:
 
 ```text
-1. Complete Phase 0 foundation
-2. Define Project domain model
-3. Define ProjectRequirements model
-4. Add representative scenario fixture
-5. Implement requirement completeness analysis
-6. Expose project API
-7. Expose requirements API
-8. Expose requirement analysis API
-9. Define ArchitectureDecision model
-10. Implement first deterministic architecture policy
+1. Add a representative scenario fixture
+2. Define application services for project and requirement workflows
+3. Expose project and requirements APIs
+4. Expose deterministic requirement analysis through an API
+5. Add normalization and preference-versus-constraint modeling
+6. Define ArchitectureDecision and ArchitectureCandidate models
+7. Expand deterministic policies beyond capability findings
+8. Preserve requirement traceability in structured results
 ```
 
 AI integration should not begin before the requirement model and first deterministic policies are stable.

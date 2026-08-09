@@ -2,8 +2,16 @@
 ## Product Requirements Document
 
 **Version:** 0.2
-**Status:** Initial Product Baseline
+**Status:** Product vision; partially implemented
 **Project:** AI Automation Architect
+
+---
+
+## Implementation Status
+
+This document defines the intended product and MVP, not a claim that every described capability exists today. The v0.1.0 repository implements structured project requirements, deterministic completeness analysis, explicit requirement-conflict detection, and deterministic engineering-capability findings. It also exposes a health endpoint.
+
+Requirement normalization, project and requirement APIs, architecture candidates, AI-assisted reasoning, risks and assumptions, human approval, persistence, and blueprint generation remain planned. See the roadmap for milestone status and the root README for the verified current feature set.
 
 ---
 
