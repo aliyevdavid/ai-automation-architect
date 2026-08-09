@@ -2,7 +2,15 @@
 ## System Architecture
 
 **Version:** 0.2
-**Status:** Initial Architecture Baseline
+**Status:** Target architecture; domain foundation partially implemented
+
+---
+
+## Implementation Status
+
+This document describes the target modular-monolith architecture. At v0.1.0, the `app/domain/` layer contains the substantive product implementation: project and requirement models plus deterministic completeness, conflict, and engineering-policy services. `app/main.py` exposes only a health endpoint.
+
+The API, application, intelligence, and infrastructure packages are currently structural placeholders. The workflows, endpoints, provider abstractions, persistence, proposal lifecycle, and blueprint generation described below are planned unless a section explicitly identifies them as implemented.
 
 ---
 
