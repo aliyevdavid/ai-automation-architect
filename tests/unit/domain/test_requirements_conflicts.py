@@ -7,6 +7,7 @@ from app.domain.models import (
     ConstraintProfile,
     DeliveryProfile,
     ProjectRequirements,
+    RequirementTraceReference,
 )
 from app.domain.services import (
     ConflictSeverity,
@@ -192,6 +193,28 @@ def test_conflict_and_result_are_immutable() -> None:
         conflict.code = "changed"  # type: ignore[misc]
     with pytest.raises(FrozenInstanceError):
         result.conflicts = ()  # type: ignore[misc]
+
+
+def test_conflict_exposes_ordered_duplicate_trace_references_without_changing_contract() -> None:
+    paths = (
+        "application.frontend_technology",
+        "constraints.prohibited_technologies[1]",
+        "application.frontend_technology",
+    )
+    conflict = RequirementConflict("code", ConflictSeverity.ERROR, paths, "message", "value")
+
+    assert conflict.field_paths is paths
+    assert conflict.trace_references == tuple(RequirementTraceReference(path) for path in paths)
+    assert (
+        RequirementConflict("code", ConflictSeverity.ERROR, paths, "message", "value")
+        == conflict
+    )
+
+
+def test_conflict_with_no_paths_exposes_no_trace_references() -> None:
+    conflict = RequirementConflict("code", ConflictSeverity.ERROR, (), "message", "value")
+
+    assert conflict.trace_references == ()
 
 
 def test_conflict_service_and_models_are_framework_independent() -> None:

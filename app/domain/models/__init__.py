@@ -9,6 +9,7 @@ from app.domain.models.project_requirements import (
     ProjectRequirements,
     TeamProfile,
 )
+from app.domain.models.requirement_trace_reference import RequirementTraceReference
 
 __all__ = [
     "ApplicationProfile",
@@ -20,5 +21,6 @@ __all__ = [
     "Project",
     "ProjectRequirements",
     "ProjectStatus",
+    "RequirementTraceReference",
     "TeamProfile",
 ]

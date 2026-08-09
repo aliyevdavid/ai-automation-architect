@@ -9,6 +9,7 @@ from app.domain.models import (
     DeliveryProfile,
     ExecutionRequirements,
     ProjectRequirements,
+    RequirementTraceReference,
     TeamProfile,
 )
 from app.domain.services import (
@@ -187,6 +188,23 @@ def test_finding_and_result_objects_are_immutable() -> None:
         finding.code = "changed"  # type: ignore[misc]
     with pytest.raises(FrozenInstanceError):
         result.findings = ()  # type: ignore[misc]
+
+
+def test_finding_exposes_ordered_duplicate_trace_references_without_changing_contract() -> None:
+    paths = (
+        "automation.api_testing",
+        "constraints.prohibited_technologies[1]",
+        "automation.api_testing",
+    )
+    finding = EngineeringPolicyFinding("code", paths, "message")
+
+    assert finding.field_paths is paths
+    assert finding.trace_references == tuple(RequirementTraceReference(path) for path in paths)
+    assert EngineeringPolicyFinding("code", paths, "message") == finding
+
+
+def test_finding_with_no_paths_exposes_no_trace_references() -> None:
+    assert EngineeringPolicyFinding("code", (), "message").trace_references == ()
 
 
 def test_policy_service_and_models_are_framework_independent() -> None:

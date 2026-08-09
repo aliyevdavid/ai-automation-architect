@@ -10,6 +10,7 @@ from app.domain.models import (
     DeliveryProfile,
     ExecutionRequirements,
     ProjectRequirements,
+    RequirementTraceReference,
     TeamProfile,
 )
 
@@ -32,6 +33,11 @@ class RequirementNormalizationChange:
     original_value: str
     normalized_value: str
     rule: RequirementNormalizationRule
+
+    @property
+    def trace_references(self) -> tuple[RequirementTraceReference, ...]:
+        """Typed tuple view of the changed requirement field."""
+        return (RequirementTraceReference(self.field_path),)
 
 
 @dataclass(frozen=True, slots=True)
