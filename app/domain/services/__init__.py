@@ -13,6 +13,12 @@ from app.domain.services.requirements_conflicts import (
     RequirementConflictResult,
     analyze_requirement_conflicts,
 )
+from app.domain.services.requirements_normalization import (
+    RequirementNormalizationChange,
+    RequirementNormalizationResult,
+    RequirementNormalizationRule,
+    normalize_project_requirements,
+)
 
 __all__ = [
     "ConflictSeverity",
@@ -20,8 +26,12 @@ __all__ = [
     "EngineeringPolicyFinding",
     "RequirementConflict",
     "RequirementConflictResult",
+    "RequirementNormalizationChange",
+    "RequirementNormalizationResult",
+    "RequirementNormalizationRule",
     "RequirementsCompletenessResult",
     "evaluate_engineering_policies",
     "analyze_requirement_conflicts",
     "analyze_requirements_completeness",
+    "normalize_project_requirements",
 ]
