@@ -1,6 +1,6 @@
 # AI Automation Architect
 
-AI Automation Architect is an early-stage engineering portfolio project for turning structured test-automation requirements into deterministic, reviewable analysis.
+AI Automation Architect is an early-stage engineering platform for turning structured test-automation requirements into deterministic, reviewable analysis.
 
 ## v0.1.0 milestone status
 

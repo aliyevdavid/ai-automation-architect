@@ -17,7 +17,7 @@ Do not open a public issue containing:
 
 If a real credential has been exposed, revoke or rotate it immediately before reporting the incident. Do not include the credential value in the report.
 
-A useful report includes the affected file or component, the impact, safe reproduction steps, and any suggested mitigation. Receipt and remediation timing depend on maintainer availability; this portfolio repository does not promise a formal service-level agreement.
+A useful report includes the affected file or component, the impact, safe reproduction steps, and any suggested mitigation. Receipt and remediation timing depend on maintainer availability; this repository does not promise a formal service-level agreement.
 
 ## Scope
 
