@@ -14,15 +14,16 @@ Completed for v0.1.0:
 - `Project`, `ProjectStatus`, and structured `ProjectRequirements` domain models
 - deterministic completeness and missing-information analysis
 - deterministic detection of explicit technology conflicts
+- deterministic normalization, preference-versus-constraint classification, and typed requirement traceability
+- application-level deterministic requirement analysis through a versioned HTTP endpoint
 - deterministic findings for explicitly requested engineering capabilities
 
 Partially complete:
 
 - domain foundation: later decision, risk, assumption, candidate, and blueprint models remain planned
-- requirement intelligence: normalization, traceability, preference-versus-constraint classification, application analysis orchestration, and the versioned requirement-analysis HTTP endpoint are implemented; broader project/workflow APIs remain planned
 - deterministic policy engine: the first narrow capability policies exist; broader suitability, compatibility, and risk policies remain planned
 
-All API workflows beyond health, AI integration, multi-option candidate generation and evaluation, proposal lifecycle, blueprint generation, persistence, artifact generation, and the engineering console remain planned. A deterministic structured candidate can now be generated from analyzed engineering-policy findings.
+Project CRUD and workflow APIs beyond health and the versioned requirement-analysis endpoint, AI integration, multi-option candidate generation and evaluation, proposal lifecycle, blueprint generation, persistence, artifact generation, and the engineering console remain planned. A deterministic structured candidate can now be generated from analyzed engineering-policy findings.
 
 ---
 
@@ -158,19 +159,21 @@ This phase should establish:
 
 ## 4. Phase 2 - Requirement Intelligence
 
+**Status:** Complete for the currently defined scope and exit criteria.
+
 ### Goal
 
 Convert submitted project information into reliable architecture context.
 
 ### Capabilities
 
-- requirement validation (partially implemented in domain models)
+- requirement validation (implemented for the current structured requirement model)
 - completeness scoring (implemented)
 - missing-information detection (implemented)
-- conflict detection (implemented for explicit technology contradictions)
-- normalization
+- conflict detection (implemented for currently defined explicit technology contradiction policies)
+- normalization (implemented)
 - preference-versus-constraint distinction (implemented for explicit structured fields)
-- requirement traceability
+- requirement traceability (implemented)
 
 ### Example
 
@@ -190,9 +193,9 @@ It should first determine:
 
 - whether enough information exists
 - whether the framework request is a preference or hard constraint
-- whether test volume introduces execution risk
-- whether browser requirements are supported
 - which important inputs are still missing
+
+Later deterministic engineering policies use this normalized context to determine implications such as whether test volume introduces execution risk or browser requirements are supported. Those suitability and risk policies are not Phase 2 completion requirements.
 
 ### Exit Criteria
 
