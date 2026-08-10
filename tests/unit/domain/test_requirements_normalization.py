@@ -9,6 +9,7 @@ from app.domain.models import (
     DeliveryProfile,
     ExecutionRequirements,
     InterfaceProfile,
+    PreferenceProfile,
     ProjectRequirements,
     RequirementTraceReference,
     TeamProfile,
@@ -32,6 +33,7 @@ def test_normalizes_supported_values_and_records_ordered_trace() -> None:
         execution=ExecutionRequirements(browsers=(" Chrome ", "Edge")),
         delivery=DeliveryProfile(ci_provider="GitHub Actions"),
         team=TeamProfile(languages=(" Python ", "C#")),
+        preferences=PreferenceProfile((" PlayWright ", "SELENIUM", "SELENIUM")),
         constraints=ConstraintProfile(
             approved_technologies=(" Playwright ", "unknown-tool"),
             prohibited_technologies=("SELENIUM",),
@@ -46,9 +48,8 @@ def test_normalizes_supported_values_and_records_ordered_trace() -> None:
         execution=ExecutionRequirements(browsers=("Chrome", "Edge")),
         delivery=DeliveryProfile(ci_provider="github actions"),
         team=TeamProfile(languages=("Python", "C#")),
-        constraints=ConstraintProfile(
-            ("playwright", "unknown-tool"), ("selenium",), ("SOC 2",)
-        ),
+        preferences=PreferenceProfile(("playwright", "selenium", "selenium")),
+        constraints=ConstraintProfile(("playwright", "unknown-tool"), ("selenium",), ("SOC 2",)),
     )
     assert tuple(change.field_path for change in result.changes) == (
         "application.frontend_technology",
@@ -56,6 +57,9 @@ def test_normalizes_supported_values_and_records_ordered_trace() -> None:
         "execution.browsers[0]",
         "delivery.ci_provider",
         "team.languages[0]",
+        "preferences.preferred_technologies[0]",
+        "preferences.preferred_technologies[1]",
+        "preferences.preferred_technologies[2]",
         "constraints.approved_technologies[0]",
         "constraints.prohibited_technologies[0]",
         "constraints.compliance_requirements[0]",
@@ -66,7 +70,7 @@ def test_normalizes_supported_values_and_records_ordered_trace() -> None:
         normalized_value="react",
         rule=RequirementNormalizationRule.CASEFOLD_CASE_INSENSITIVE_VALUE,
     )
-    assert result.changes[5] == RequirementNormalizationChange(
+    assert result.changes[8] == RequirementNormalizationChange(
         field_path="constraints.approved_technologies[0]",
         original_value=" Playwright ",
         normalized_value="playwright",
@@ -81,6 +85,7 @@ def test_preserves_none_false_empty_tuples_and_original_aggregate() -> None:
         execution=ExecutionRequirements(parallel_execution=False, browsers=()),
         delivery=DeliveryProfile(pull_request_validation=False),
         team=TeamProfile(languages=None),
+        preferences=PreferenceProfile(preferred_technologies=()),
         constraints=ConstraintProfile(
             approved_technologies=None,
             prohibited_technologies=(),
@@ -97,6 +102,7 @@ def test_preserves_none_false_empty_tuples_and_original_aggregate() -> None:
     assert normalized.execution.parallel_execution is False
     assert normalized.execution.browsers == ()
     assert normalized.team.languages is None
+    assert normalized.preferences.preferred_technologies == ()
     assert normalized.constraints.approved_technologies is None
     assert normalized.constraints.prohibited_technologies == ()
     assert result.changes == ()
@@ -107,9 +113,7 @@ def test_unchanged_canonical_data_has_no_changes_and_preserves_collection_order(
     requirements = ProjectRequirements(
         application=ApplicationProfile(frontend_technology="react"),
         execution=ExecutionRequirements(browsers=("Firefox", "Chrome", "Firefox")),
-        constraints=ConstraintProfile(
-            approved_technologies=("custom technology", "playwright")
-        ),
+        constraints=ConstraintProfile(approved_technologies=("custom technology", "playwright")),
     )
 
     first = normalize_project_requirements(requirements)
@@ -168,12 +172,15 @@ def test_change_exposes_single_indexed_trace_reference_without_changing_contract
 
     assert change.field_path is path
     assert change.trace_references == (RequirementTraceReference(path),)
-    assert RequirementNormalizationChange(
-        path,
-        " Playwright ",
-        "playwright",
-        RequirementNormalizationRule.TRIM_AND_CASEFOLD_CASE_INSENSITIVE_VALUE,
-    ) == change
+    assert (
+        RequirementNormalizationChange(
+            path,
+            " Playwright ",
+            "playwright",
+            RequirementNormalizationRule.TRIM_AND_CASEFOLD_CASE_INSENSITIVE_VALUE,
+        )
+        == change
+    )
 
 
 def test_normalization_service_is_framework_independent() -> None:

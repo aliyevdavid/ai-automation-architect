@@ -9,16 +9,19 @@ from app.domain.models import (
     AutomationRequirements,
     ConstraintProfile,
     ExecutionRequirements,
+    PreferenceProfile,
     ProjectRequirements,
     RequirementTraceReference,
 )
 from app.domain.services import (
     EngineeringPolicyEvaluationResult,
+    RequirementClassificationResult,
     RequirementConflictResult,
     RequirementNormalizationResult,
     RequirementsCompletenessResult,
     analyze_requirement_conflicts,
     analyze_requirements_completeness,
+    classify_project_requirements,
     evaluate_engineering_policies,
     normalize_project_requirements,
 )
@@ -28,6 +31,7 @@ def test_analysis_composes_existing_domain_results_from_normalized_requirements(
     requirements = ProjectRequirements(
         application=ApplicationProfile(frontend_technology="Playwright"),
         automation=AutomationRequirements(ui_testing=True),
+        preferences=PreferenceProfile(("  PLAYWRIGHT  ",)),
         constraints=ConstraintProfile(
             approved_technologies=("  PLAYWRIGHT  ",),
             prohibited_technologies=(" playwright ",),
@@ -42,6 +46,7 @@ def test_analysis_composes_existing_domain_results_from_normalized_requirements(
     assert isinstance(result.normalization, RequirementNormalizationResult)
     assert isinstance(result.completeness, RequirementsCompletenessResult)
     assert isinstance(result.conflicts, RequirementConflictResult)
+    assert isinstance(result.classification, RequirementClassificationResult)
     assert isinstance(result.engineering_policies, EngineeringPolicyEvaluationResult)
     assert normalized.constraints.approved_technologies == ("playwright",)
     assert normalized.constraints.prohibited_technologies == ("playwright",)
@@ -56,6 +61,8 @@ def test_analysis_composes_existing_domain_results_from_normalized_requirements(
     )
     assert result.completeness == analyze_requirements_completeness(normalized)
     assert result.conflicts == analyze_requirement_conflicts(normalized)
+    assert result.classification == classify_project_requirements(normalized)
+    assert result.classification.classifications[0].value == "playwright"
     assert tuple(conflict.conflicting_value for conflict in result.conflicts.conflicts) == (
         "playwright",
         "playwright",
@@ -111,6 +118,7 @@ def test_analysis_is_immutable_deterministic_and_supports_empty_requirements() -
     assert first.normalization == normalize_project_requirements(requirements)
     assert first.completeness == analyze_requirements_completeness(requirements)
     assert first.conflicts == RequirementConflictResult(())
+    assert first.classification == RequirementClassificationResult(())
     assert first.engineering_policies == EngineeringPolicyEvaluationResult(())
     with pytest.raises(FrozenInstanceError):
         first.conflicts = RequirementConflictResult(())  # type: ignore[misc]
@@ -127,6 +135,5 @@ def test_application_boundary_is_framework_independent_and_dependency_points_inw
     assert analyze_project_requirements.__module__ == "app.application.requirement_analysis"
     assert "fastapi" not in application_source.casefold()
     assert all(
-        "app.application" not in source.read_text(encoding="utf-8")
-        for source in domain_sources
+        "app.application" not in source.read_text(encoding="utf-8") for source in domain_sources
     )

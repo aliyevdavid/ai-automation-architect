@@ -3,6 +3,12 @@ from app.domain.services.engineering_policy_evaluation import (
     EngineeringPolicyFinding,
     evaluate_engineering_policies,
 )
+from app.domain.services.requirements_classification import (
+    RequirementClassification,
+    RequirementClassificationKind,
+    RequirementClassificationResult,
+    classify_project_requirements,
+)
 from app.domain.services.requirements_completeness import (
     RequirementsCompletenessResult,
     analyze_requirements_completeness,
@@ -29,9 +35,13 @@ __all__ = [
     "RequirementNormalizationChange",
     "RequirementNormalizationResult",
     "RequirementNormalizationRule",
+    "RequirementClassification",
+    "RequirementClassificationKind",
+    "RequirementClassificationResult",
     "RequirementsCompletenessResult",
     "evaluate_engineering_policies",
     "analyze_requirement_conflicts",
     "analyze_requirements_completeness",
+    "classify_project_requirements",
     "normalize_project_requirements",
 ]

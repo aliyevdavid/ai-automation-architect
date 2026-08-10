@@ -3,11 +3,13 @@ from dataclasses import dataclass
 from app.domain.models import ProjectRequirements
 from app.domain.services import (
     EngineeringPolicyEvaluationResult,
+    RequirementClassificationResult,
     RequirementConflictResult,
     RequirementNormalizationResult,
     RequirementsCompletenessResult,
     analyze_requirement_conflicts,
     analyze_requirements_completeness,
+    classify_project_requirements,
     evaluate_engineering_policies,
     normalize_project_requirements,
 )
@@ -20,6 +22,7 @@ class RequirementAnalysisResult:
     normalization: RequirementNormalizationResult
     completeness: RequirementsCompletenessResult
     conflicts: RequirementConflictResult
+    classification: RequirementClassificationResult
     engineering_policies: EngineeringPolicyEvaluationResult
 
 
@@ -34,5 +37,6 @@ def analyze_project_requirements(
         normalization=normalization,
         completeness=analyze_requirements_completeness(normalized_requirements),
         conflicts=analyze_requirement_conflicts(normalized_requirements),
+        classification=classify_project_requirements(normalized_requirements),
         engineering_policies=evaluate_engineering_policies(normalized_requirements),
     )

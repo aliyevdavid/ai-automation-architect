@@ -19,7 +19,7 @@ Completed for v0.1.0:
 Partially complete:
 
 - domain foundation: later decision, risk, assumption, candidate, and blueprint models remain planned
-- requirement intelligence: normalization, traceability, application analysis orchestration, and the versioned requirement-analysis HTTP endpoint are implemented; preference-versus-constraint classification and broader project/workflow APIs remain planned
+- requirement intelligence: normalization, traceability, preference-versus-constraint classification, application analysis orchestration, and the versioned requirement-analysis HTTP endpoint are implemented; broader project/workflow APIs remain planned
 - deterministic policy engine: the first narrow capability policies exist; broader suitability, compatibility, and risk policies remain planned
 
 All API workflows beyond health, AI integration, multi-option candidate generation and evaluation, proposal lifecycle, blueprint generation, persistence, artifact generation, and the engineering console remain planned. A deterministic structured candidate can now be generated from analyzed engineering-policy findings.
@@ -169,7 +169,7 @@ Convert submitted project information into reliable architecture context.
 - missing-information detection (implemented)
 - conflict detection (implemented for explicit technology contradictions)
 - normalization
-- preference-versus-constraint distinction
+- preference-versus-constraint distinction (implemented for explicit structured fields)
 - requirement traceability
 
 ### Example
@@ -838,7 +838,7 @@ The next implementation priorities after v0.1.0 should be:
 2. Define application services for project and requirement workflows
 3. Expose project and requirements APIs
 4. Expose deterministic requirement analysis through an API
-5. Add normalization and preference-versus-constraint modeling
+5. Expand deterministic requirement intelligence beyond normalization and explicit preference-versus-constraint modeling
 6. Define ArchitectureDecision and ArchitectureCandidate models
 7. Expand deterministic policies beyond capability findings
 8. Preserve requirement traceability in structured results

@@ -44,6 +44,9 @@ def _analysis_payload() -> dict[str, object]:
             "languages": [],
             "automation_experience": "intermediate",
         },
+        "preferences": {
+            "preferred_technologies": ["  PLAYWRIGHT  ", "SELENIUM", "SELENIUM"],
+        },
         "constraints": {
             "approved_technologies": ["  PLAYWRIGHT  "],
             "prohibited_technologies": [" playwright "],
@@ -61,11 +64,17 @@ def test_analysis_returns_structured_normalized_traceable_result() -> None:
         "normalization",
         "completeness",
         "conflicts",
+        "classification",
         "engineering_policies",
     }
 
     normalized = body["normalization"]["normalized_requirements"]
     assert normalized["constraints"]["approved_technologies"] == ["playwright"]
+    assert normalized["preferences"]["preferred_technologies"] == [
+        "playwright",
+        "selenium",
+        "selenium",
+    ]
     assert normalized["constraints"]["prohibited_technologies"] == ["playwright"]
     assert normalized["automation"]["ui_testing"] is False
     assert normalized["automation"]["api_testing"] is True
@@ -92,6 +101,17 @@ def test_analysis_returns_structured_normalized_traceable_result() -> None:
     assert body["engineering_policies"]["findings"][0]["trace_references"] == [
         {"field_path": "automation.api_testing"}
     ]
+    classifications = body["classification"]["classifications"]
+    assert [(item["field_path"], item["kind"], item["value"]) for item in classifications] == [
+        ("preferences.preferred_technologies[0]", "preference", "playwright"),
+        ("preferences.preferred_technologies[1]", "preference", "selenium"),
+        ("preferences.preferred_technologies[2]", "preference", "selenium"),
+        ("constraints.approved_technologies[0]", "constraint", "playwright"),
+        ("constraints.prohibited_technologies[0]", "constraint", "playwright"),
+    ]
+    assert classifications[0]["trace_references"] == [
+        {"field_path": "preferences.preferred_technologies[0]"}
+    ]
 
 
 def test_analysis_preserves_none_false_and_empty_collection_semantics() -> None:
@@ -104,6 +124,7 @@ def test_analysis_preserves_none_false_and_empty_collection_semantics() -> None:
                 "approved_technologies": None,
                 "prohibited_technologies": [],
             },
+            "preferences": {"preferred_technologies": []},
         },
     )
 
@@ -115,6 +136,24 @@ def test_analysis_preserves_none_false_and_empty_collection_semantics() -> None:
     assert normalized["execution"]["browsers"] == []
     assert normalized["constraints"]["approved_technologies"] is None
     assert normalized["constraints"]["prohibited_technologies"] == []
+    assert normalized["preferences"]["preferred_technologies"] == []
+
+
+def test_omitted_and_null_preferences_preserve_transport_semantics() -> None:
+    omitted = client.post("/api/v1/requirements/analyze", json={})
+    supplied_null = client.post(
+        "/api/v1/requirements/analyze",
+        json={"preferences": {"preferred_technologies": None}},
+    )
+
+    assert omitted.status_code == 200
+    assert supplied_null.status_code == 200
+    assert omitted.json()["normalization"]["normalized_requirements"]["preferences"] == {
+        "preferred_technologies": None
+    }
+    assert supplied_null.json()["normalization"]["normalized_requirements"]["preferences"] == {
+        "preferred_technologies": None
+    }
 
 
 def test_completeness_missing_trace_references_are_serialized() -> None:

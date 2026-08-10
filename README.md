@@ -12,6 +12,7 @@ Implemented today:
 - structured, immutable `ProjectRequirements` profiles
 - deterministic requirement completeness analysis
 - deterministic detection of explicit technology conflicts
+- explicit deterministic classification of technology preferences and constraints
 - deterministic evaluation of explicitly requested engineering capabilities
 - deterministic structured automation architecture candidate generation
 - a versioned `POST /api/v1/requirements/analyze` requirement-analysis endpoint
