@@ -94,7 +94,7 @@ Reasons not selected:
 - high risk of business logic leaking into API handlers
 - high risk of direct AI and database coupling
 - difficult future refactoring
-- poor fit for an architecture-focused portfolio project
+- poor fit for the current architecture-focused product scope
 - weak separation between deterministic and AI-assisted behavior
 
 ---

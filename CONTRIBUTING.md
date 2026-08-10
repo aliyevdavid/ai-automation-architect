@@ -1,6 +1,6 @@
 # Contributing
 
-AI Automation Architect is currently maintained as a portfolio project. Contact the repository owner before investing in a substantial external contribution so that scope and direction can be confirmed.
+AI Automation Architect is currently maintained as an actively evolving engineering project. Contact the repository owner before investing in a substantial external contribution so that scope and direction can be confirmed.
 
 ## Development setup
 
