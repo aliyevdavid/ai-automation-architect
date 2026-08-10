@@ -764,7 +764,7 @@ Architecture Proposal
 Blueprint
 ```
 
-This scenario becomes the main portfolio demonstration.
+This scenario becomes the primary end-to-end product demonstration.
 
 ---
 
@@ -857,7 +857,7 @@ The roadmap should be revisited when:
 - implementation complexity is materially different from expected
 - a new requirement changes the delivery order
 - a planned technology no longer fits the architecture
-- portfolio value can be improved without compromising engineering quality
+- product clarity and engineering value can be improved without compromising engineering quality
 
 The roadmap is intended to keep development deliberate.
 
