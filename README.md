@@ -2,9 +2,9 @@
 
 AI Automation Architect is an early-stage engineering platform for turning structured test-automation requirements into deterministic, reviewable analysis.
 
-## v0.1.0 milestone status
+## Current development status
 
-The current repository implements the domain foundation and the first deterministic requirement-analysis services. It does **not** yet generate automation architectures or blueprints, call an AI provider, persist project data, or expose project and requirement workflows over HTTP.
+The current repository implements the domain foundation, deterministic requirement-analysis services, a versioned HTTP endpoint for requirement analysis, and generation of a deterministic structured automation architecture candidate from analyzed requirements. It does **not** yet generate implementation blueprints, call an AI provider, persist project data, rank architecture alternatives, or provide an approval workflow.
 
 Implemented today:
 
@@ -13,6 +13,8 @@ Implemented today:
 - deterministic requirement completeness analysis
 - deterministic detection of explicit technology conflicts
 - deterministic evaluation of explicitly requested engineering capabilities
+- deterministic structured automation architecture candidate generation
+- a versioned `POST /api/v1/requirements/analyze` requirement-analysis endpoint
 - a FastAPI application with `GET /health`
 - automated tests, Ruff, strict mypy, and GitHub Actions CI
 
@@ -20,7 +22,7 @@ Planned capabilities are documented in the [product requirements](docs/PRODUCT_R
 
 ## Design approach
 
-The project is designed as a modular monolith with explicit API, application, domain, intelligence, and infrastructure boundaries. At v0.1.0, substantive product behavior exists in the domain layer. The other layers are foundations for later milestones.
+The project is designed as a modular monolith with explicit API, application, domain, intelligence, and infrastructure boundaries. Implemented behavior currently spans the domain, application, and API layers, while intelligence and infrastructure capabilities remain intentionally limited for later milestones.
 
 Deterministic rules are intentionally established before AI-assisted reasoning. This keeps requirement validation and explicit engineering policies predictable, testable, and independent of network access.
 
@@ -28,8 +30,8 @@ Deterministic rules are intentionally established before AI-assisted reasoning. 
 
 ```text
 app/
-  api/              # future HTTP workflows
-  application/      # future use-case orchestration
+  api/              # HTTP transport and versioned requirement-analysis endpoint
+  application/      # deterministic use-case orchestration and candidate generation
   domain/           # implemented models and deterministic services
   infrastructure/   # future technical adapters
   intelligence/     # future AI-assisted reasoning

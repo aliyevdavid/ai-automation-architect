@@ -19,10 +19,10 @@ Completed for v0.1.0:
 Partially complete:
 
 - domain foundation: later decision, risk, assumption, candidate, and blueprint models remain planned
-- requirement intelligence: normalization, preference-versus-constraint classification, traceability, application services, and HTTP submission remain planned
+- requirement intelligence: normalization, traceability, application analysis orchestration, and the versioned requirement-analysis HTTP endpoint are implemented; preference-versus-constraint classification and broader project/workflow APIs remain planned
 - deterministic policy engine: the first narrow capability policies exist; broader suitability, compatibility, and risk policies remain planned
 
-All API workflows beyond health, AI integration, candidate generation, proposal lifecycle, blueprint generation, persistence, artifact generation, and the engineering console remain planned.
+All API workflows beyond health, AI integration, multi-option candidate generation and evaluation, proposal lifecycle, blueprint generation, persistence, artifact generation, and the engineering console remain planned. A deterministic structured candidate can now be generated from analyzed engineering-policy findings.
 
 ---
 
