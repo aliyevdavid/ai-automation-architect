@@ -10,6 +10,7 @@ from app.domain.models import (
     DeliveryProfile,
     ExecutionRequirements,
     InterfaceProfile,
+    PreferenceProfile,
     ProjectRequirements,
     TeamProfile,
 )
@@ -22,6 +23,8 @@ def test_requirements_default_to_unspecified_profiles() -> None:
     assert requirements.interfaces == InterfaceProfile()
     assert requirements.execution.browsers is None
     assert requirements.team.languages is None
+    assert requirements.preferences == PreferenceProfile()
+    assert requirements.preferences.preferred_technologies is None
     assert requirements.constraints.approved_technologies is None
 
 
@@ -81,6 +84,23 @@ def test_domain_collections_are_immutable() -> None:
         execution.browsers = ("Firefox",)  # type: ignore[misc]
 
 
+def test_preference_profile_preserves_explicit_tuple_semantics() -> None:
+    empty = PreferenceProfile(preferred_technologies=())
+    supplied = PreferenceProfile(preferred_technologies=("Selenium", "Playwright", "Selenium"))
+
+    assert empty.preferred_technologies == ()
+    assert supplied.preferred_technologies == ("Selenium", "Playwright", "Selenium")
+    with pytest.raises(FrozenInstanceError):
+        supplied.preferred_technologies = ()  # type: ignore[misc]
+
+
+def test_preference_profile_rejects_lists_and_blank_members() -> None:
+    with pytest.raises(TypeError, match="preferred_technologies must be a tuple or None"):
+        PreferenceProfile(preferred_technologies=["playwright"])  # type: ignore[arg-type]
+    with pytest.raises(ValueError, match="preferred_technologies"):
+        PreferenceProfile(preferred_technologies=("playwright", " "))
+
+
 @pytest.mark.parametrize("expected_test_count", [-1, -100])
 def test_negative_expected_test_count_is_invalid(expected_test_count: int) -> None:
     with pytest.raises(ValueError, match="expected_test_count must not be negative"):
@@ -112,9 +132,7 @@ def test_non_positive_team_size_is_invalid(team_size: int) -> None:
         (lambda: ConstraintProfile(compliance_requirements=("\n",)), "compliance_requirements"),
     ],
 )
-def test_blank_collection_values_are_invalid(
-    factory: Callable[[], object], message: str
-) -> None:
+def test_blank_collection_values_are_invalid(factory: Callable[[], object], message: str) -> None:
     with pytest.raises(ValueError, match=message):
         factory()
 
@@ -130,6 +148,7 @@ def test_domain_model_has_no_framework_dependencies() -> None:
             DeliveryProfile(),
             TeamProfile(),
             ConstraintProfile(),
+            PreferenceProfile(),
         )
     }
 
@@ -201,6 +220,7 @@ def test_scalar_string_fields_trim_surrounding_whitespace() -> None:
         ("execution", DeliveryProfile(), "ExecutionRequirements"),
         ("delivery", TeamProfile(), "DeliveryProfile"),
         ("team", ConstraintProfile(), "TeamProfile"),
+        ("preferences", ConstraintProfile(), "PreferenceProfile"),
         ("constraints", ApplicationProfile(), "ConstraintProfile"),
     ],
 )

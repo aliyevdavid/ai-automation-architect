@@ -55,15 +55,18 @@ class ConstraintProfileRequest(ApiModel):
     compliance_requirements: list[str] | None = None
 
 
+class PreferenceProfileRequest(ApiModel):
+    preferred_technologies: list[str] | None = None
+
+
 class ProjectRequirementsRequest(ApiModel):
     application: ApplicationProfileRequest = Field(default_factory=ApplicationProfileRequest)
     interfaces: InterfaceProfileRequest = Field(default_factory=InterfaceProfileRequest)
-    automation: AutomationRequirementsRequest = Field(
-        default_factory=AutomationRequirementsRequest
-    )
+    automation: AutomationRequirementsRequest = Field(default_factory=AutomationRequirementsRequest)
     execution: ExecutionRequirementsRequest = Field(default_factory=ExecutionRequirementsRequest)
     delivery: DeliveryProfileRequest = Field(default_factory=DeliveryProfileRequest)
     team: TeamProfileRequest = Field(default_factory=TeamProfileRequest)
+    preferences: PreferenceProfileRequest = Field(default_factory=PreferenceProfileRequest)
     constraints: ConstraintProfileRequest = Field(default_factory=ConstraintProfileRequest)
 
 
@@ -115,6 +118,10 @@ class ConstraintProfileResponse(ApiModel):
     compliance_requirements: tuple[str, ...] | None
 
 
+class PreferenceProfileResponse(ApiModel):
+    preferred_technologies: tuple[str, ...] | None
+
+
 class ProjectRequirementsResponse(ApiModel):
     application: ApplicationProfileResponse
     interfaces: InterfaceProfileResponse
@@ -122,6 +129,7 @@ class ProjectRequirementsResponse(ApiModel):
     execution: ExecutionRequirementsResponse
     delivery: DeliveryProfileResponse
     team: TeamProfileResponse
+    preferences: PreferenceProfileResponse
     constraints: ConstraintProfileResponse
 
 
@@ -166,6 +174,17 @@ class ConflictsResponse(ApiModel):
     has_conflicts: bool
 
 
+class RequirementClassificationResponse(ApiModel):
+    field_path: str
+    value: str
+    kind: str
+    trace_references: tuple[TraceReferenceResponse, ...]
+
+
+class ClassificationResponse(ApiModel):
+    classifications: tuple[RequirementClassificationResponse, ...]
+
+
 class EngineeringPolicyFindingResponse(ApiModel):
     code: str
     field_paths: tuple[str, ...]
@@ -183,4 +202,5 @@ class RequirementAnalysisResponse(ApiModel):
     normalization: NormalizationResponse
     completeness: CompletenessResponse
     conflicts: ConflictsResponse
+    classification: ClassificationResponse
     engineering_policies: EngineeringPoliciesResponse

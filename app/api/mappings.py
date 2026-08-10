@@ -1,6 +1,7 @@
 from app.api.schemas import (
     ApplicationProfileResponse,
     AutomationRequirementsResponse,
+    ClassificationResponse,
     CompletenessResponse,
     ConflictResponse,
     ConflictsResponse,
@@ -12,9 +13,11 @@ from app.api.schemas import (
     InterfaceProfileResponse,
     NormalizationChangeResponse,
     NormalizationResponse,
+    PreferenceProfileResponse,
     ProjectRequirementsRequest,
     ProjectRequirementsResponse,
     RequirementAnalysisResponse,
+    RequirementClassificationResponse,
     TeamProfileResponse,
     TraceReferenceResponse,
 )
@@ -26,6 +29,7 @@ from app.domain.models import (
     DeliveryProfile,
     ExecutionRequirements,
     InterfaceProfile,
+    PreferenceProfile,
     ProjectRequirements,
     RequirementTraceReference,
     TeamProfile,
@@ -70,6 +74,9 @@ def request_to_domain(request: ProjectRequirementsRequest) -> ProjectRequirement
             team_size=request.team.team_size,
             languages=_optional_tuple(request.team.languages),
             automation_experience=request.team.automation_experience,
+        ),
+        preferences=PreferenceProfile(
+            preferred_technologies=_optional_tuple(request.preferences.preferred_technologies),
         ),
         constraints=ConstraintProfile(
             approved_technologies=_optional_tuple(request.constraints.approved_technologies),
@@ -125,6 +132,9 @@ def _requirements(requirements: ProjectRequirements) -> ProjectRequirementsRespo
             languages=requirements.team.languages,
             automation_experience=requirements.team.automation_experience,
         ),
+        preferences=PreferenceProfileResponse(
+            preferred_technologies=requirements.preferences.preferred_technologies,
+        ),
         constraints=ConstraintProfileResponse(
             approved_technologies=requirements.constraints.approved_technologies,
             prohibited_technologies=requirements.constraints.prohibited_technologies,
@@ -138,6 +148,7 @@ def result_to_response(result: RequirementAnalysisResult) -> RequirementAnalysis
     normalization = result.normalization
     completeness = result.completeness
     conflicts = result.conflicts
+    classification = result.classification
     policies = result.engineering_policies
     return RequirementAnalysisResponse(
         normalization=NormalizationResponse(
@@ -175,6 +186,17 @@ def result_to_response(result: RequirementAnalysisResult) -> RequirementAnalysis
             ),
             conflict_count=conflicts.conflict_count,
             has_conflicts=conflicts.has_conflicts,
+        ),
+        classification=ClassificationResponse(
+            classifications=tuple(
+                RequirementClassificationResponse(
+                    field_path=item.field_path,
+                    value=item.value,
+                    kind=item.kind.value,
+                    trace_references=tuple(map(_trace, item.trace_references)),
+                )
+                for item in classification.classifications
+            ),
         ),
         engineering_policies=EngineeringPoliciesResponse(
             findings=tuple(

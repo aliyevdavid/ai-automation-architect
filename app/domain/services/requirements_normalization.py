@@ -9,6 +9,7 @@ from app.domain.models import (
     ConstraintProfile,
     DeliveryProfile,
     ExecutionRequirements,
+    PreferenceProfile,
     ProjectRequirements,
     RequirementTraceReference,
     TeamProfile,
@@ -20,9 +21,7 @@ class RequirementNormalizationRule(StrEnum):
 
     TRIM_SURROUNDING_WHITESPACE = "trim_surrounding_whitespace"
     CASEFOLD_CASE_INSENSITIVE_VALUE = "casefold_case_insensitive_value"
-    TRIM_AND_CASEFOLD_CASE_INSENSITIVE_VALUE = (
-        "trim_and_casefold_case_insensitive_value"
-    )
+    TRIM_AND_CASEFOLD_CASE_INSENSITIVE_VALUE = "trim_and_casefold_case_insensitive_value"
 
 
 @dataclass(frozen=True, slots=True)
@@ -69,9 +68,7 @@ def _normalize_string(
         rule = RequirementNormalizationRule.CASEFOLD_CASE_INSENSITIVE_VALUE
     else:
         rule = RequirementNormalizationRule.TRIM_SURROUNDING_WHITESPACE
-    changes.append(
-        RequirementNormalizationChange(field_path, value, normalized_value, rule)
-    )
+    changes.append(RequirementNormalizationChange(field_path, value, normalized_value, rule))
     return normalized_value
 
 
@@ -110,6 +107,7 @@ def normalize_project_requirements(
     execution = requirements.execution
     delivery = requirements.delivery
     team = requirements.team
+    preferences = requirements.preferences
     constraints = requirements.constraints
 
     normalized_requirements = ProjectRequirements(
@@ -161,6 +159,14 @@ def normalize_project_requirements(
                 changes=changes,
             ),
             automation_experience=team.automation_experience,
+        ),
+        preferences=PreferenceProfile(
+            preferred_technologies=_normalize_collection(
+                preferences.preferred_technologies,
+                field_path="preferences.preferred_technologies",
+                case_insensitive=True,
+                changes=changes,
+            ),
         ),
         constraints=ConstraintProfile(
             approved_technologies=_normalize_collection(

@@ -151,6 +151,16 @@ class TeamProfile:
 
 
 @dataclass(frozen=True, slots=True)
+class PreferenceProfile:
+    """Explicitly supplied soft technology preferences."""
+
+    preferred_technologies: tuple[str, ...] | None = None
+
+    def __post_init__(self) -> None:
+        _validate_collection("preferred_technologies", self.preferred_technologies)
+
+
+@dataclass(frozen=True, slots=True)
 class ConstraintProfile:
     """Technology and compliance constraints that recommendations must respect."""
 
@@ -174,6 +184,7 @@ class ProjectRequirements:
     execution: ExecutionRequirements = field(default_factory=ExecutionRequirements)
     delivery: DeliveryProfile = field(default_factory=DeliveryProfile)
     team: TeamProfile = field(default_factory=TeamProfile)
+    preferences: PreferenceProfile = field(default_factory=PreferenceProfile)
     constraints: ConstraintProfile = field(default_factory=ConstraintProfile)
 
     def __post_init__(self) -> None:
@@ -184,6 +195,7 @@ class ProjectRequirements:
             ("execution", self.execution, ExecutionRequirements),
             ("delivery", self.delivery, DeliveryProfile),
             ("team", self.team, TeamProfile),
+            ("preferences", self.preferences, PreferenceProfile),
             ("constraints", self.constraints, ConstraintProfile),
         )
         for name, value, expected_type in expected_types:

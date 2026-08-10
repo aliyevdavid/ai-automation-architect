@@ -14,6 +14,7 @@ from app.domain.models.project_requirements import (
     DeliveryProfile,
     ExecutionRequirements,
     InterfaceProfile,
+    PreferenceProfile,
     ProjectRequirements,
     TeamProfile,
 )
@@ -33,6 +34,7 @@ __all__ = [
     "ExecutionStrategy",
     "InterfaceProfile",
     "Project",
+    "PreferenceProfile",
     "ProjectRequirements",
     "ProjectStatus",
     "RequirementTraceReference",
